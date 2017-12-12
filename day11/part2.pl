@@ -84,7 +84,7 @@ sub calc_steps {
 	my $total_steps = abs($x) + abs($y);
 	print "X,Y = $x,$y\n";
 	print "Total steps = $total_steps\n";
-	print "Max steps = $max_steps\n";
+	print "Max steps = $max_steps\n";	
 	print "\n";
 	return $total_steps;
 }

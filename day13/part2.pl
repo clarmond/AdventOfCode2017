@@ -3,24 +3,6 @@
 use Data::Dumper;
 use strict;
 
-#--- Run test
-my $test_data = <<END;
-0: 3
-1: 2
-4: 4
-6: 4
-END
-
-my $delay = 0;
-my $severity = 1;
-while ($severity) {
-	$severity = &run_data($test_data, $delay);
-	print "Delay = $delay  Caught = $severity\n";
-	if ($severity) {
-		$delay++;
-	}
-}
-
 #--- Run puzzle
 my $puzzle;
 open (IN, "input.txt");
@@ -29,8 +11,8 @@ while (<IN>) {
 }
 close (IN);
 
-$delay = 0;
-$severity = 1;
+my $delay = 6000;
+my $severity = 1;
 while ($severity) {
 	$severity = &run_data($puzzle, $delay);
 	print "Delay = $delay  Caught = $severity\n";
@@ -63,63 +45,21 @@ sub run_data {
 		}
 	}
 
-	my $severity = 0;
-
 	for (my $iter = 0; $iter <= $max_depth + $delay; $iter++) {
 		my $pos = $iter - $delay;
 
-		#print "Picosecond $iter\n";
-		#print "-------------\n";
-		for (my $i = 0; $i <= $max_depth; $i++) {
-			#print " $i  ";
-		}
-		#print "\n";
 		for (my $r = 1; $r <= $max_range; $r++) {
 			for (my $i = 0; $i <= $max_depth; $i++) {
 				if (($layer_range{$i}) && ($r <= $layer_range{$i})) {
-					if (($pos == $i) && ($r == 1)) {
-						#print "(";
-					}
-					else {
-						#print "[";
-					}
 					if ($scanner_position{$i} == $r) {
 						if (($pos == $i) &&  ($scanner_position{$i} == 1)){
-							#print "X";
+							print "$pos\n";
 							return 1;
-							$severity = $severity + ($i * $layer_range{$i}) + 1;
 						}
-						else {
-							#print "S";
-						}
-					}
-					else {
-						#print " ";
-					}
-					if (($pos == $i) && ($r == 1)) {
-						#print ") ";
-					}
-					else {
-						#print "] ";
-					}
-				}
-				else {
-					if ($r == 1) {
-						if (($pos == $i) && ($r == 1)) {
-							#print "(.) ";
-						}
-						else {
-							#print "... ";
-						}
-					}
-					else {
-						#print "    ";
 					}
 				}
 			}
-			#print "\n";
 		}
-		#print "\n\n";
 
 		#--- Increment scanner positions
 		foreach my $depth (sort keys %scanner_position) {
@@ -133,5 +73,5 @@ sub run_data {
 		}
 	}
 
-	return $severity;
+	return 0;
 }

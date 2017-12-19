@@ -10,10 +10,13 @@ my @table;
 open(IN, $input_file);
 my $row = 0;
 my $starting_x;
+my $max_x = 0;
+my $max_y = 0;
 while (<IN>) {
 	chomp;
 	my $line = $_;
 	my $length = length($line);
+	$max_x = $length - 1;
 	for (my $col = 0; $col < $length; $col++) {
 		my $curr_char = substr($line, $col, 1);
 		$curr_char =~ s/ //;
@@ -24,6 +27,7 @@ while (<IN>) {
 	}
 	$row++;
 }
+$max_y = $row - 1;
 
 my $direction = "S";
 my $x = $starting_x;
@@ -31,6 +35,8 @@ my $y = 0;
 
 my @letters;
 my @visited;
+my $steps = 1;
+$visited[$x][$y] = 1;
 while (1) {
 	#print "Current Position: $x,$y\n";
 	if ($direction eq "N") {
@@ -67,7 +73,9 @@ while (1) {
 		}
 	}
 
-	last if (($x < 0) || ($y < 0));
+	last if (($x < 0) || ($y < 0) || ($x > $max_x) || ($y > $max_y));
+	$steps++;
+	last if $next_char eq "F";
 }
 
 print "Letters seen: ";
@@ -75,3 +83,22 @@ foreach (@letters) {
 	print "$_"
 }
 print "\n";
+
+print "Steps: $steps\n";
+
+for (my $y = 0; $y <= $max_y; $y++) {
+	for (my $x = 0; $x <= $max_x; $x++) {
+		if ($table[$x][$y]) {
+			if ($visited[$x][$y]) {
+				print "*"
+			}
+			else {
+				print $table[$x][$y];
+			}
+		}
+		else {
+			print " ";
+		}
+	}
+	print "\n";
+}
